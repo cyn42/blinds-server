@@ -1,8 +1,10 @@
 /**
  * config.h
  *
- * Contains sensitive and environemnt specific info that shold not
+ * Contains sensitive and environment specific info that should not
  * be checked into source control.
+ *
+ * Rename to 'config.h' and add your environment specific info
  *
  */
 

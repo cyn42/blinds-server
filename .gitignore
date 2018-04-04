@@ -2,5 +2,5 @@
 .piolibdeps
 .clang_complete
 .gcc-flags.json
-lib/config/config.h
+lib/cfg/cfg.h
 lib/readme.txt
