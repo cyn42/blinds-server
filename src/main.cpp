@@ -54,11 +54,21 @@ void setup(void)
   digitalWrite(connectingLED, LOW);
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(200, "text/plain", "Hello from the blinds server, control from /blinds/control");
+    request->send(200, "text/plain", "Hello from the blinds server, control from /blinds/[open|close|stop]");
   });
 
-  server.on("/blinds/control",  HTTP_GET, [](AsyncWebServerRequest *request){
-    webString="Control the Blinds";
+  server.on("/blinds/open",  HTTP_GET, [](AsyncWebServerRequest *request){
+    webString="Open the Blinds";
+    request->send(200, "text/plain", webString);               // send to someones browser when asked
+  });
+
+  server.on("/blinds/close",  HTTP_GET, [](AsyncWebServerRequest *request){
+    webString="Close the Blinds";
+    request->send(200, "text/plain", webString);               // send to someones browser when asked
+  });
+
+  server.on("/blinds/stop",  HTTP_GET, [](AsyncWebServerRequest *request){
+    webString="Stop the Blinds";
     request->send(200, "text/plain", webString);               // send to someones browser when asked
   });
 
