@@ -18,6 +18,10 @@ const char* password = WIFIPASSWORD;
 int connectingLED = 15;
 int connectedLED = 14;
 
+HardwareSerial Serial2( 2 );
+
+#define SERIAL2_RX 12
+#define SERIAL2_TX 13
 
 String webString="";     // String to display
 
@@ -25,7 +29,9 @@ AsyncWebServer server(80);
 
 void setup(void)
 {
-  Serial.begin(115200);
+  //Serial.begin(9600); //Connection to motor controller
+  Serial2.begin( 9600, SERIAL_8N1, SERIAL2_RX, SERIAL2_TX );
+  delay(10);
 
   pinMode(connectingLED, OUTPUT);
   digitalWrite(connectingLED, HIGH);
@@ -34,7 +40,6 @@ void setup(void)
   digitalWrite(connectedLED, LOW);
 
   WiFi.begin(ssid, password);
-  Serial.print("\n\r \n\rWorking to connect");
 
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
@@ -42,14 +47,8 @@ void setup(void)
     delay(250);
     digitalWrite(connectingLED, HIGH);
     delay(250);
-    Serial.print(".");
+
   }
-  Serial.println("");
-  Serial.println("Blinds Control Server");
-  Serial.print("Connected to ");
-  Serial.println(ssid);
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
   digitalWrite(connectedLED, HIGH);
   digitalWrite(connectingLED, LOW);
 
@@ -58,22 +57,25 @@ void setup(void)
   });
 
   server.on("/blinds/open",  HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial2.print('H');
     webString="Open the Blinds";
     request->send(200, "text/plain", webString);               // send to someones browser when asked
   });
 
   server.on("/blinds/close",  HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial2.print('L');
     webString="Close the Blinds";
     request->send(200, "text/plain", webString);               // send to someones browser when asked
   });
 
   server.on("/blinds/stop",  HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial2.print('S');
     webString="Stop the Blinds";
     request->send(200, "text/plain", webString);               // send to someones browser when asked
   });
 
   server.begin();
-  Serial.println("HTTP server started");
+
 }
 
 void loop(void)
